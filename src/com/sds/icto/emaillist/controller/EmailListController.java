@@ -8,7 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.sds.icto.emaillist.dao.EmailDao;
 import com.sds.icto.emaillist.vo.EmailVO;
@@ -23,12 +22,13 @@ public class EmailListController {
 	public String index(Model model){
 		ArrayList<EmailVO> list = emailDao.selectList();
 		model.addAttribute("list", list);
-		return "/views/show_emaillist.jsp";
+		return "show_emaillist";
+		// view 리졸버가 prefix와 suffix를 붙여준다.
 	}
 	
 	@RequestMapping("/form")
 	public String form(){
-		return "/views/form_emaillist.jsp";
+		return "form_emaillist";
 	}
 	
 	@RequestMapping(value="/insert", method=RequestMethod.POST)

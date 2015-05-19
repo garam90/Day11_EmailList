@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Repository;
 
+import com.sds.icto.emaillist.exception.UserDeleteException;
+import com.sds.icto.emaillist.exception.UserInsertException;
 import com.sds.icto.emaillist.vo.EmailVO;
 
 @Repository
@@ -47,10 +49,10 @@ public class EmailDao {
 					e.printStackTrace();
 				}
 			}
-		}catch(ClassNotFoundException e){
-			e.printStackTrace();
-		}catch (SQLException e) {
-			e.printStackTrace();
+		}catch(ClassNotFoundException | SQLException e){
+			//Exception 처리 ( Log 필요 )
+			throw new UserInsertException(e.getMessage());
+
 		}
 	}
 
@@ -92,9 +94,7 @@ public class EmailDao {
 			}
 			
 			
-		}catch(ClassNotFoundException e){
-			e.printStackTrace();
-		}catch (SQLException e) {
+		}catch(ClassNotFoundException | SQLException e){
 			e.printStackTrace();
 		}
 		return list;
@@ -124,26 +124,30 @@ public class EmailDao {
 		}
 	}
 	
-	public void delete() throws SQLException, ClassNotFoundException{
-		Connection conn = getConnection();
-		PreparedStatement stmt = null;
-		String sql = "delete from email_list";
-		stmt = conn.prepareStatement(sql);
-		stmt.executeUpdate();
-		
-		if (stmt != null) {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+	public void delete(){
+		try{
+			Connection conn = getConnection();
+			PreparedStatement stmt = null;
+			String sql = "delete from email_list";
+			stmt = conn.prepareStatement(sql);
+			stmt.executeUpdate();
+			
+			if (stmt != null) {
+				try {
+					stmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
-		}
-		if (conn != null) {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
+		}catch(ClassNotFoundException | SQLException e){
+			throw new UserDeleteException(e.getMessage());
 		}
 	}
 }
